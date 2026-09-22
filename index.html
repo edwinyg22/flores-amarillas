@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ramo de Flores Amarillas</title>
+  <title>Ramo de Flores Amarillas Brillantísimo</title>
   <style>
     * {
       margin: 0;
@@ -14,7 +14,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #0d1b1e;
+      background-color: #1a2f1c;
       font-family: 'Georgia', serif;
     }
     canvas {
@@ -42,33 +42,45 @@
 
     let time = 0;
 
-    // Partículas doradas y brillantes flotantes
-    const particles = Array.from({ length: 70 }, () => ({
+    // Partículas doradas extras y muy luminosas
+    const particles = Array.from({ length: 80 }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      radius: Math.random() * 3 + 1,
-      speedY: -(Math.random() * 0.5 + 0.2),
-      speedX: Math.random() * 0.4 - 0.2,
-      opacity: Math.random() * 0.8 + 0.2
+      radius: Math.random() * 3.5 + 1.5,
+      speedY: -(Math.random() * 0.6 + 0.2),
+      speedX: Math.random() * 0.5 - 0.25,
+      opacity: Math.random() * 0.9 + 0.3
     }));
 
-    // Dibujo de flor individual dentro del ramo
+    // Dibujo de flor individual brillante
     function drawFlower(x, y, scale) {
       ctx.save();
       ctx.translate(x, y);
 
-      // Pétalos amarillos vibrantes
+      // Pétalos Amarillo Neón / Sol (Muy resplandecientes)
       const petals = 12;
-      ctx.fillStyle = '#ffea00';
-      ctx.shadowBlur = 18;
-      ctx.shadowColor = '#ffb700';
+      ctx.fillStyle = '#ffff33';
+      ctx.shadowBlur = 25;
+      ctx.shadowColor = '#ffea00';
 
       for (let i = 0; i < petals; i++) {
         const angle = (i * Math.PI * 2) / petals;
         ctx.save();
         ctx.rotate(angle);
         ctx.beginPath();
-        ctx.ellipse(0, 22 * scale, 9 * scale, 20 * scale, 0, 0, Math.PI * 2);
+        ctx.ellipse(0, 22 * scale, 9.5 * scale, 21 * scale, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Capa interior de pétalos para dar volumen y brillo
+      ctx.fillStyle = '#ffcc00';
+      for (let i = 0; i < petals; i++) {
+        const angle = ((i + 0.5) * Math.PI * 2) / petals;
+        ctx.save();
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.ellipse(0, 15 * scale, 7 * scale, 14 * scale, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
@@ -77,30 +89,41 @@
       ctx.shadowBlur = 0;
       ctx.beginPath();
       ctx.arc(0, 0, 12 * scale, 0, Math.PI * 2);
-      ctx.fillStyle = '#6b4226';
+      ctx.fillStyle = '#8b4513';
       ctx.fill();
 
       ctx.restore();
     }
 
-    // Dibujo del Ramo Completo
+    // Dibujo del Ramo
     function drawBouquet(centerX, centerY, wind) {
       ctx.save();
       ctx.translate(centerX, centerY);
       ctx.rotate(wind);
 
-      // Envoltura/Papel del Ramo
-      ctx.fillStyle = '#3d2612';
+      // Envoltura/Papel Claro del Ramo
+      ctx.fillStyle = '#d4a373';
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = 'rgba(0,0,0,0.3)';
       ctx.beginPath();
       ctx.moveTo(0, 140);
-      ctx.lineTo(-65, -10);
-      ctx.lineTo(65, -10);
+      ctx.lineTo(-70, -10);
+      ctx.lineTo(70, -10);
       ctx.closePath();
       ctx.fill();
 
-      // Tallos verdes
-      ctx.strokeStyle = '#2d6a4f';
-      ctx.lineWidth = 4;
+      // Capa interior de la envoltura
+      ctx.fillStyle = '#faedcd';
+      ctx.beginPath();
+      ctx.moveTo(0, 140);
+      ctx.lineTo(-60, -10);
+      ctx.lineTo(60, -10);
+      ctx.closePath();
+      ctx.fill();
+
+      // Tallos verdes vibrantes
+      ctx.strokeStyle = '#38b000';
+      ctx.lineWidth = 5;
       const stemAngles = [-0.3, -0.15, 0, 0.15, 0.3];
       stemAngles.forEach(ang => {
         ctx.beginPath();
@@ -109,81 +132,70 @@
         ctx.stroke();
       });
 
-      // Flores
-      drawFlower(-40, -40, 1.0);
-      drawFlower(40, -40, 1.0);
-      drawFlower(-20, -75, 1.1);
-      drawFlower(20, -75, 1.1);
-      drawFlower(0, -110, 1.25);
+      // Arreglo de Flores
+      drawFlower(-42, -40, 1.05);
+      drawFlower(42, -40, 1.05);
+      drawFlower(-22, -78, 1.15);
+      drawFlower(22, -78, 1.15);
+      drawFlower(0, -115, 1.3);
 
-      // Cinta dorada
-      ctx.fillStyle = '#ffb703';
+      // Cinta roja/dorada vistosa
+      ctx.fillStyle = '#d90429';
       ctx.fillRect(-25, 50, 50, 12);
+      ctx.fillStyle = '#ffb703';
       ctx.beginPath();
-      ctx.arc(0, 56, 10, 0, Math.PI * 2);
+      ctx.arc(0, 56, 9, 0, Math.PI * 2);
       ctx.fill();
 
-      // Tarjeta de Regalo
+      // Tarjeta de Regalo Clara
       ctx.save();
       ctx.translate(0, 10);
-      ctx.fillStyle = '#fffdf0';
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = 'rgba(0,0,0,0.4)';
-      ctx.fillRect(-120, 0, 240, 60);
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = 'rgba(0,0,0,0.3)';
+      ctx.fillRect(-125, 0, 250, 62);
 
-      // Borde dorado de la tarjeta
-      ctx.strokeStyle = '#d4af37';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(-116, 4, 232, 52);
+      // Borde dorado
+      ctx.strokeStyle = '#ffb703';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(-120, 4, 240, 54);
 
-      // Texto de la tarjeta
+      // Texto
       ctx.shadowBlur = 0;
-      ctx.fillStyle = '#2b1e17';
-      ctx.font = 'italic 15px Georgia';
+      ctx.fillStyle = '#10002b';
+      ctx.font = 'bold italic 16px Georgia';
       ctx.textAlign = 'center';
-      ctx.fillText('Para la persona más', 0, 26);
-      ctx.fillText('importante para mí', 0, 46);
+      ctx.fillText('Para la persona más', 0, 27);
+      ctx.fillText('importante para mí', 0, 48);
       ctx.restore();
 
       ctx.restore();
     }
 
-    // Fondo Místico y Colorido
+    // Fondo Claro y Radiante (Verde Mágico Luminoso)
     function drawBackground() {
-      // Radial para dar luz cálida en el centro
       const bgGrad = ctx.createRadialGradient(
-        width / 2, height / 2, 50,
-        width / 2, height / 2, Math.max(width, height) / 1.2
+        width / 2, height / 2 - 50, 20,
+        width / 2, height / 2, Math.max(width, height)
       );
-      bgGrad.addColorStop(0, '#1b4332');   // Verde esmeralda claro brillante
-      bgGrad.addColorStop(0.4, '#081c15'); // Verde bosque profundo
-      bgGrad.addColorStop(1, '#020d18');   // Azul oscuro bordes
-      
+      bgGrad.addColorStop(0, '#52b788');   // Verde claro resplandeciente en el centro
+      bgGrad.addColorStop(0.4, '#2d6a4f'); // Verde medio brillante
+      bgGrad.addColorStop(0.8, '#1b4332'); // Verde esmeralda
+      bgGrad.addColorStop(1, '#081c15');   // Bordes suaves
+
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, width, height);
 
-      // Aura resplandeciente centro
+      // Halo de luz dorado detrás del ramo
       ctx.save();
-      ctx.fillStyle = 'rgba(255, 215, 0, 0.08)';
+      const glowGrad = ctx.createRadialGradient(
+        width / 2, height / 2, 10,
+        width / 2, height / 2, 320
+      );
+      glowGrad.addColorStop(0, 'rgba(255, 234, 0, 0.35)');
+      glowGrad.addColorStop(1, 'rgba(255, 234, 0, 0)');
+      ctx.fillStyle = glowGrad;
       ctx.beginPath();
-      ctx.arc(width / 2, height / 2, 280, 0, Math.PI * 2);
+      ctx.arc(width / 2, height / 2, 320, 0, Math.PI * 2);
       ctx.fill();
-      ctx.restore();
-    }
-
-    // Bucle de animación
-    function animate() {
-      time += 0.02;
-      ctx.clearRect(0, 0, width, height);
-
-      drawBackground();
-
-      const wind = Math.sin(time) * 0.04;
-
-      // Dibujar ramo
-      drawBouquet(width / 2, height / 2 + 30, wind);
-
-      // Dibujar luces flotantes
-      for (let p of particles) {
-        ctx.fillStyle = `rgba(255, 240, 150, ${p.opacity})`;
-        ctx.shadow
+      ctx.restore
