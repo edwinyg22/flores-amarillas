@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ramo de Flores Amarillas</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #03070d;
+      font-family: 'Georgia', serif;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="mainCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let time = 0;
+
+    // Lluvia
+    const raindrops = Array.from({ length: 160 }, () => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      length: Math.random() * 25 + 10,
+      speed: Math.random() * 12 + 15,
+      opacity: Math.random() * 0.35 + 0.15
+    }));
+
+    // Partículas doradas
+    const particles = Array.from({ length: 50 }, () => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      radius: Math.random() * 2.5 + 1,
+      speedY: -(Math.random() * 0.6 + 0.2),
+      speedX: Math.random() * 0.4 - 0.2,
+      opacity: Math.random() * 0.8 + 0.2
+    }));
+
+    // Dibujo de flor individual dentro del ramo
+    function drawFlower(x, y, scale) {
+      ctx.save();
+      ctx.translate(x, y);
+
+      // Pétalos
+      const petals = 12;
+      ctx.fillStyle = '#ffd700';
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#ffae00';
+
+      for (let i = 0; i < petals; i++) {
+        const angle = (i * Math.PI * 2) / petals;
+        ctx.save();
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.ellipse(0, 22 * scale, 9 * scale, 20 * scale, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Centro
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.arc(0, 0, 12 * scale, 0, Math.PI * 2);
+      ctx.fillStyle = '#6b4226';
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // Dibujo del Ramo Completo
+    function drawBouquet(centerX, centerY, wind) {
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.rotate(wind);
+
+      // Envoltura/Papel del Ramo
+      ctx.fillStyle = '#2b1e17';
+      ctx.beginPath();
+      ctx.moveTo(0, 140);
+      ctx.lineTo(-65, -10);
+      ctx.lineTo(65, -10);
+      ctx.closePath();
+      ctx.fill();
+
+      // Tallos agrupados
+      ctx.strokeStyle = '#2d6a4f';
+      ctx.lineWidth = 4;
+      const stemAngles = [-0.3, -0.15, 0, 0.15, 0.3];
+      stemAngles.forEach(ang => {
+        ctx.beginPath();
+        ctx.moveTo(0, 100);
+        ctx.lineTo(Math.sin(ang) * 90, -40);
+        ctx.stroke();
+      });
+
+      // Flores acomodadas en ramo
+      drawFlower(-40, -40, 1.0);
+      drawFlower(40, -40, 1.0);
+      drawFlower(-20, -75, 1.1);
+      drawFlower(20, -75, 1.1);
+      drawFlower(0, -110, 1.25);
+
+      // Cinta/Lazo dorado del ramo
+      ctx.fillStyle = '#ffb703';
+      ctx.fillRect(-25, 50, 50, 12);
+      ctx.beginPath();
+      ctx.arc(0, 56, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Tarjeta de Regalo
+      ctx.save();
+      ctx.translate(0, 10);
+      ctx.fillStyle = '#fffdf0';
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = 'rgba(0,0,0,0.5)';
+      ctx.fillRect(-120, 0, 240, 60);
+
+      // Borde de la tarjeta
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(-116, 4, 232, 52);
+
+      // Texto de la tarjeta
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#2b1e17';
+      ctx.font = 'italic 15px Georgia';
+      ctx.textAlign = 'center';
+      ctx.fillText('Para la persona más', 0, 26);
+      ctx.fillText('importante para mí', 0, 46);
+      ctx.restore();
+
+      ctx.restore();
+    }
+
+    // Fondo
+    function drawBackground() {
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+      bgGrad.addColorStop(0, '#02050a');
+      bgGrad.addColorStop(0.5, '#081c15');
+      bgGrad.addColorStop(1, '#02050a');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
+    }
+
+    // Bucle de animación
+    function animate() {
+      time += 0.02;
+      ctx.clearRect(0, 0, width, height);
+
+      drawBackground();
+
+      const wind = Math.sin(time) * 0.05;
+
+      // Dibujar ramo en el centro
+      drawBouquet(width / 2, height / 2 + 30, wind);
+
+      // Dibujar Lluvia
+      ctx.lineWidth = 1.2;
+      for (let drop of raindrops) {
+        ctx.strokeStyle = `rgba(180, 210, 255, ${drop.opacity})`;
+        ctx.beginPath();
+        ctx.moveTo(drop.x, drop.y);
+        ctx.lineTo(drop.x - 3, drop.y + drop.length);
+        ctx.stroke();
+
+        drop.y += drop.speed;
+        drop.x -= 1.5;
+
+        if (drop.y > height) {
+          drop.y = -drop.length;
+          drop.x = Math.random() * width;
+        }
+      }
+
+      // Dibujar Luces
+      for (let p of particles) {
+        ctx.fillStyle = `rgba(255, 235, 120, ${p.opacity})`;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = "rgba(255, 215, 0, 1)";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        p.y += p.speedY;
+        p.x += p.speedX + Math.sin(time + p.y) * 0.3;
+
+        if (p.y < 0) {
+          p.y = height + 10;
+          p.x = Math.random() * width;
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
